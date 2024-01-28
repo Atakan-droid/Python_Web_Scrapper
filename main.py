@@ -11,7 +11,6 @@ import os
 # The same object can be reused to fire multiple queries
 
 # headless=True will run the browser in background
-query_param = {"sarma":50,"pizza":50,"burger":50,"pasta":50}
 
 def scraper(param):
     sc = Scraper(headless=True)
@@ -33,7 +32,8 @@ def scraper(param):
     count = 0
     for response in stream.get():
             # response.to_dict returns python representable dictionary
-        print(response.thumbnail)
+        if response.thumbnail is None:
+            continue
 
         try:
             base64Img = response.thumbnail.split(',')[1]
@@ -52,6 +52,15 @@ def scraper(param):
 
 
 if __name__ == "__main__":
+
+    # Could get from args
+    query_param = {
+        "sarma":50,
+        "pizza":50,
+        "burger":50,
+        "pasta":50
+        }
+
     os.makedirs('Images', exist_ok=True)
     os.chdir('Images')
     for index,item in enumerate(query_param.items()):
